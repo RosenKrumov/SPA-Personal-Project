@@ -1,0 +1,24 @@
+<!-- header -->
+<header class="header" id="header">
+    <nav class="navbar navbar-default" id="navbar">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/><a href="#/profile" class="navbar-brand"><u>{{userData.name}}</u></a></li>
+                <li><a href="#/news"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
+                <li><a href="#/profile/edit"><span class="glyphicon glyphicon-cog"></span> Edit profile</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Friend requests</a></li>
+                <li><a href="#/profile/changePassword"><span class="glyphicon glyphicon-lock"></span> Change password</a></li>
+                <li ng-controller="AuthenticationController"><a href="#/" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+            <form class="navbar-right navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                            </span>
+                </div>
+            </form>
+        </div>
+    </nav>
+</header>
+<!-- end of header -->
