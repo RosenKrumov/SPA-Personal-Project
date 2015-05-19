@@ -19,18 +19,6 @@ legend {
     margin-right: 30px;
 }
 
-.col-lg-20 {
-    position: absolute;
-    top: 220px;
-    left: 900px;
-}
-
-.col-lg-3 {
-    position: absolute;
-    top: 117px;
-    left: -400px;
-}
-
 .logo {
     height: 30px;
     background-color: lightgray;
@@ -49,11 +37,6 @@ legend {
     display: block;
     width: 70%;
     margin: 0 auto;
-}
-
-.header {
-    background-image: url('../imgs/clouds.png');
-    background-position: center center;
 }
 
 .header .image-container {
@@ -146,11 +129,6 @@ div.radio input {
     vertical-align: bottom;
 }
 
-input[type="file"] {
-    position:absolute;
-    display:none !important;
-}
-
 .center-btn {
     display: block !important;
     text-align: center;
@@ -190,6 +168,40 @@ a {
 footer {
     border-top: solid 1px #E3E3E3;
     background-color: #F5F5F5;
+}
+
+#coverImage {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 220px;
+}
+
+img.thumbnail.cover-picture-preview {
+    height: 100px;
+    width: 200px;
+    margin-right: 250px;
+    margin-bottom: 22px;
+    margin-top:30px;
+}
+
+#picture {
+    margin-left: 80px;
+}
+
+.validationP {
+    margin-left: -100px;
+}
+
+#pictureUpload {
+    position: absolute;
+    top:200px;
+    right: 820px;
+}
+
+#coverUpload {
+    margin-top: -50px;
+    margin-left: 1000px;
 }
 
 @media only screen and (max-width: 490px) {

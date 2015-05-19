@@ -10,10 +10,6 @@ SocialNetwork.controller('ProfileController',
         $scope.uploadProfileImage = function() {
             var selector = document.body;
 
-            $(selector).on('click', '#upload-file-button', function () {
-                $('#picture').click();
-            });
-
             $(selector).on('change', '#picture', function () {
                 var file = this.files[0],
                     reader;
@@ -35,10 +31,6 @@ SocialNetwork.controller('ProfileController',
 
         $scope.uploadCoverImage = function() {
             var selector = document.body;
-
-            $(selector).on('click', '#cover-upload-file-button', function () {
-                $('#cover-picture').click();
-            });
 
             $(selector).on('change', '#cover-picture', function () {
                 var file = this.files[0],
