@@ -7,13 +7,13 @@
                 <div class="form-group">
                     <label for="name" class="col-lg-3 control-label">Name:</label>
                     <div class="col-lg-9">
-                        <input type="text" class="form-control" id="name" placeholder="{{userData.name}}" ng-model="editUserData.name"/>
+                        <input type="text" class="form-control" id="name" ng-model="userData.name"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email" class="col-lg-3 control-label">Email:</label>
                     <div class="col-lg-9">
-                        <input type="email" class="form-control" id="email" ng-model="editUserData.email" placeholder="{{userData.email}}"/>
+                        <input type="email" class="form-control" id="email" ng-model="userData.email"/>
                     </div>
                 </div>
                 <div class="form-group" >
@@ -21,13 +21,13 @@
                     <div class="col-lg-9">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="gender-radio" ng-model="editUserData.gender" value="male" ng-checked="userData.gender===1">Male
+                                <input type="radio" name="gender-radio" ng-model="userData.gender" value="male" ng-checked="userData.gender===1">Male
                             </label>
                             <label>
-                                <input type="radio" name="gender-radio" ng-model="editUserData.gender" value="female" ng-checked="userData.gender===2">Female
+                                <input type="radio" name="gender-radio" ng-model="userData.gender" value="female" ng-checked="userData.gender===2">Female
                             </label>
                             <label>
-                                <input type="radio" name="gender-radio" ng-model="editUserData.gender" value="other" ng-checked="userData.gender===0">Other
+                                <input type="radio" name="gender-radio" ng-model="userData.gender" value="other" ng-checked="userData.gender===0">Other
                             </label>
                         </div>
                     </div>
@@ -35,6 +35,7 @@
             </div>
 
             <div class="col-lg-3 picture-upload">
+                <p style="margin-left: 150px;">Profile Image:</p>
                 <div class="form-group">
                     <img class="thumbnail picture-preview" ng-src="{{userData.profileImageData}}"/>
                 </div>
@@ -46,18 +47,19 @@
                     <p>Allowed format: .jpg</p>
                 </div>
             </div>
-            <!--<div class="col-lg-3 picture-upload">-->
-                <!--<div class="form-group">-->
-                    <!--<img class="thumbnail cover-picture-preview" ng-src="{{userData.coverImageData}}"/>-->
-                <!--</div>-->
-                <!--<div class="form-group">-->
-                    <!--<p class="cover-picture-name"></p>-->
-                    <!--<button type="button" id="cover-upload-file-button" class="btn btn-md btn-info">Upload</button>-->
-                    <!--<input type="file" id="cover-picture"/>-->
-                    <!--<p>Size limit: 128KB</p>-->
-                    <!--<p>Allowed format: .jpg</p>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="col-lg-20 picture-upload">
+                <p>Cover Image:</p>
+                <div class="form-group">
+                    <img class="thumbnail cover-picture-preview" ng-src="{{userData.coverImageData}}"/>
+                </div>
+                <div class="form-group">
+                    <p class="cover-picture-name"></p>
+                    <button type="button" id="cover-upload-file-button" class="btn btn-md btn-info">Upload</button>
+                    <input type="file" id="cover-picture"/>
+                    <p>Size limit: 128KB</p>
+                    <p>Allowed format: .jpg</p>
+                </div>
+            </div>
 
             <div class="form-group col-lg-12" style="margin-top: -100px;">
                 <div class="col-lg-10 col-lg-offset-2">

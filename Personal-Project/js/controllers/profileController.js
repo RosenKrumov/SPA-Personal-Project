@@ -1,7 +1,12 @@
 'use strict';
 SocialNetwork.controller('ProfileController',
     function($scope, $location, $route, profileAuthentication) {
-        $scope.editUserData = {};
+        $scope.ClearData = function () {
+            $scope.loginData = "";
+            $scope.registerData = "";
+            $scope.userData = "";
+            $scope.passwordData = "";
+        };
         $scope.uploadProfileImage = function() {
             var selector = document.body;
 
@@ -18,7 +23,7 @@ SocialNetwork.controller('ProfileController',
                     reader.onload = function () {
                         $('.picture-name').text(file.name);
                         $('.picture-preview').attr('src', reader.result);
-                        $scope.editUserData.profileImageData = $('.picture-preview').attr('src');
+                        $scope.userData.profileImageData = $('.picture-preview').attr('src');
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -28,31 +33,31 @@ SocialNetwork.controller('ProfileController',
             });
         }();
 
-        //$scope.uploadCoverImage = function() {
-        //    var selector = document.body;
-        //
-        //    $(selector).on('click', '#cover-upload-file-button', function () {
-        //        $('#cover-picture').click();
-        //    });
-        //
-        //    $(selector).on('change', '#cover-picture', function () {
-        //        var file = this.files[0],
-        //            reader;
-        //
-        //        if (file.type.match(/image\/.*/)) {
-        //            reader = new FileReader();
-        //            reader.onload = function () {
-        //                $('.cover-picture-name').text(file.name);
-        //                $('.cover-picture-preview').attr('src', reader.result);
-        //                $scope.editUserData.coverImageData = $('.cover-picture-preview').attr('src');
-        //            };
-        //            reader.readAsDataURL(file);
-        //        } else {
-        //            //Noty.error("Invalid file format.");
-        //            console.log('invalid format');
-        //        }
-        //    });
-        //}();
+        $scope.uploadCoverImage = function() {
+            var selector = document.body;
+
+            $(selector).on('click', '#cover-upload-file-button', function () {
+                $('#cover-picture').click();
+            });
+
+            $(selector).on('change', '#cover-picture', function () {
+                var file = this.files[0],
+                    reader;
+
+                if (file.type.match(/image\/.*/)) {
+                    reader = new FileReader();
+                    reader.onload = function () {
+                        $('.cover-picture-name').text(file.name);
+                        $('.cover-picture-preview').attr('src', reader.result);
+                        $scope.userData.coverImageData = $('.cover-picture-preview').attr('src');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    //Noty.error("Invalid file format.");
+                    console.log('invalid format');
+                }
+            });
+        }();
 
         $scope.getEditUserData = function() {
             profileAuthentication.GetUserProfile(
@@ -66,21 +71,27 @@ SocialNetwork.controller('ProfileController',
         }();
 
         $scope.editUser = function () {
-            if (!$scope.editUserData.profileImageData) {
-                $scope.editUserData.profileImageData = $scope.userData.profileImageData;
+            if (!$scope.userData.profileImageData) {
+                delete $scope.userData.profileImageData;
             }
-            if (!$scope.editUserData.gender) {
-                $scope.editUserData.gender = $scope.userData.gender;
+            if (!$scope.userData.coverImageData) {
+                delete $scope.userData.coverImageData;
             }
-            if (!$scope.editUserData.name) {
-                $scope.editUserData.name = $scope.userData.name;
+            if (!$scope.userData.gender) {
+                delete $scope.userData.gender;
             }
-            if (!$scope.editUserData.email) {
-                $scope.editUserData.email = $scope.userData.email;
+            if (!$scope.userData.name) {
+                delete $scope.userData.name;
             }
-            profileAuthentication.EditUserProfile($scope.editUserData,
+            if (!$scope.userData.email) {
+                delete $scope.userData.email;
+            }
+            profileAuthentication.EditUserProfile($scope.userData,
                 function() {
-                    //$scope.ClearData();
+                    $scope.ClearData();
+                    var image = new Image();
+                    //image.src = $scope.userData.coverImageData;
+                    $('#header').css('background-image', 'url:' + image);
                     $location.path('/profile');
                 },
                 function (serverError) {
@@ -91,7 +102,7 @@ SocialNetwork.controller('ProfileController',
         $scope.changePassword = function () {
             profileAuthentication.ChangePassword($scope.passwordData,
                 function() {
-                    //$scope.ClearData();
+                    $scope.ClearData();
                     $location.path('/profile');
                 },
                 function (serverError) {
