@@ -1,9 +1,9 @@
 <!-- header -->
-<header class="header" id="header">
+<header class="header" id="header" ng-controller="ProfileController" ng-style="{'background-image':'url('+'{{userData.coverImageData}}'+')'}">
     <nav class="navbar navbar-default" id="navbar">
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><img id="navbarImg" src="https://citizenmed.files.wordpress.com/2011/08/user-icon1.jpg" alt="image"/><a href="#/home" class="navbar-brand"><u>Full name</u></a></li>
+                <li><img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/><a href="#/profile" class="navbar-brand"><u>{{userData.name}}</u></a></li>
                 <li><a href="#/news"><span class="glyphicon glyphicon-list-alt"></span> News</a></li>
                 <li><a href="#/profile/edit"><span class="glyphicon glyphicon-cog"></span> Edit profile</a></li>
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> Friend requests</a></li>
@@ -23,10 +23,10 @@
 
     <!-- user header -->
     <div class="image-container">
-        <img class="thumbnail" />
+        <img class="thumbnail" ng-src="{{userData.profileImageData}}"/>
     </div>
     <div class="summary-container">
-        <h2>Name</h2>
+        <h2>{{userData.name}}</h2>
     </div>
     <!-- end of user header -->
 
