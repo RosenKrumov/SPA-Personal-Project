@@ -1,12 +1,25 @@
 'use strict';
+
 SocialNetwork.controller('ProfileController',
-    function($scope, $location, $route, profileAuthentication) {
+    function($scope, $location, $route, $routeParams, profileAuthentication, notifyService) {
         $scope.ClearData = function () {
             $scope.loginData = "";
             $scope.registerData = "";
             $scope.userData = "";
             $scope.passwordData = "";
         };
+
+        $scope.getFriendRequests = function() {
+            profileAuthentication.GetFriendRequests(profileAuthentication.GetHeaders(),
+                function(data) {
+                    $scope.friendRequests = data;
+                    console.log(data);
+                }, function(error) {
+                    console.log(error);
+                }
+            );
+        }();
+
         $scope.uploadProfileImage = function() {
             var selector = document.body;
 
@@ -23,7 +36,7 @@ SocialNetwork.controller('ProfileController',
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    //Noty.error("Invalid file format.");
+                    notifyService.showError("Invalid file format");
                     console.log('invalid format');
                 }
             });
@@ -45,14 +58,14 @@ SocialNetwork.controller('ProfileController',
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    //Noty.error("Invalid file format.");
+                    notifyService.showError("Invalid file format");
                     console.log('invalid format');
                 }
             });
         }();
 
-        $scope.getEditUserData = function() {
-            profileAuthentication.GetUserProfile(
+        $scope.getMyData = function() {
+            profileAuthentication.GetMyProfile(
                 function(serverData) {
                     $scope.userData = serverData;
                     console.log(serverData);
@@ -61,6 +74,48 @@ SocialNetwork.controller('ProfileController',
                 }
             )
         }();
+
+        $scope.getUserData = function() {
+            if($routeParams.username) {
+                if($routeParams.username === sessionStorage['username']) {
+                    profileAuthentication.GetMyProfile(
+                        function(serverData) {
+                            $scope.otherUserData = serverData;
+                            console.log(serverData);
+                        }, function(serverError) {
+                            console.log(serverError);
+                        }
+                    )
+                } else {
+                    profileAuthentication.GetUserProfile($routeParams.username,
+                        function(data) {
+                            $scope.otherUserData = data;
+                        }, function(error) {
+                            console.log(error);
+                        }
+                    );
+                }
+            }
+
+        }();
+
+        $scope.acceptRequest = function(id) {
+            profileAuthentication.ApproveRequest(id,
+                function() {
+                    $route.reload();
+                }, function(error) {
+                    console.log(error);
+                })
+        };
+
+        $scope.rejectRequest = function(id) {
+            profileAuthentication.RejectRequest(id,
+                function() {
+                    $route.reload();
+                }, function(error) {
+                    console.log(error);
+                })
+        };
 
         $scope.editUser = function () {
             if (!$scope.userData.profileImageData) {
@@ -81,13 +136,14 @@ SocialNetwork.controller('ProfileController',
             profileAuthentication.EditUserProfile($scope.userData,
                 function() {
                     $scope.ClearData();
-                    var image = new Image();
-                    //image.src = $scope.userData.coverImageData;
-                    $('#header').css('background-image', 'url:' + image);
+                    notifyService.showInfo("Profile successfully edited");
+                    var username = sessionStorage['username'];
+                    $location.path('/' + username);
                     $location.path('/profile');
                 },
                 function (serverError) {
                     console.log(serverError);
+                    notifyService.showError("Error editing profile", serverError);
                 });
         };
 
@@ -95,14 +151,14 @@ SocialNetwork.controller('ProfileController',
             profileAuthentication.ChangePassword($scope.passwordData,
                 function() {
                     $scope.ClearData();
-                    $location.path('/profile');
+                    notifyService.showInfo("Password changed successfully");
+                    var username = sessionStorage['username'];
+                    $location.path('/' + username);
                 },
                 function (serverError) {
                     console.log(serverError);
+                    notifyService.showError("Error changing password", serverError);
                 });
         };
-
-
-
     }
 );
