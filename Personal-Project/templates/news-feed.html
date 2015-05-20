@@ -1,3 +1,24 @@
 <div ng-include="'templates/navbar-header.html'"></div>
 <h2 style="text-align: center;">News Feed</h2>
-<div ng-include="'templates/post.html'"></div>
+<div ng-controller="postController">
+    <article class="post well" ng-repeat="item in news">
+        <header class="post-header">
+            <div class="post-image">
+                <img class="mini-thumbnail" ng-src="{{item.author.profileImageData}}"/>
+            </div>
+            <div class="post-info">
+                <p><a href="#/{{item.author.username}}" class="profile-link">{{item.author.name}}</a></p>
+                <p>on <time>{{item.date | date : 'medium'}}</time></p>
+            </div>
+        </header>
+        <div class="right">
+            <span><a href="#">{{item.likesCount}}</a></span>
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+            <span><a href="#">1</a></span>
+            <span class="glyphicon glyphicon-comment"></span>
+        </div>
+        <section class="post-content">
+            <p>{{item.postContent}}</p>
+        </section>
+    </article>
+</div>
