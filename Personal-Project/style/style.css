@@ -195,13 +195,22 @@ img.thumbnail.cover-picture-preview {
 
 #pictureUpload {
     position: absolute;
-    top:200px;
+    top:300px;
     right: 820px;
 }
 
 #coverUpload {
-    margin-top: -50px;
+    margin-top: -25px;
     margin-left: 1000px;
+}
+
+#post-container {
+    padding-top: 50px;
+}
+
+#post-container .thumbnail {
+    width: 50px;
+    height: 50px;
 }
 
 @media only screen and (max-width: 490px) {
