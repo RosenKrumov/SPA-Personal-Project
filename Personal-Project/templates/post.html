@@ -1,23 +1,45 @@
-<!-- posts page -->
-<article class="post well">
-    <header class="post-header">
-        <div class="post-image">
-            <img class="mini-thumbnail" />
+<!-- post box -->
+<div class="post-container" id="post-container" ng-controller="postController">
+    <form class="form-horizontal" ng-submit="addPost()">
+        <fieldset>
+            <div class="form-group">
+                <div>
+                    <textarea class="form-control" rows="3" id="post-content" ng-model="postData.PostContent" placeholder="Message..."></textarea>
+                </div>
+            </div>
+            <div class="form-group pull-right">
+                <div class="image-container">
+                    <img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/>
+                </div> as {{userData.name}}
+            </div>
+            <div class="form-group pull-left">
+                <div>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<!-- end of post box -->
+<div ng-controller="postController">
+    <article class="post well" ng-repeat="userPost in userPosts">
+        <header class="post-header">
+            <div class="post-image">
+                <img class="mini-thumbnail" ng-src="{{userPost.author.profileImageData}}"/>
+            </div>
+            <div class="post-info">
+                <p><a href="#/{{userPost.author.username}}" class="profile-link">{{userPost.author.name}}</a></p>
+                <p>on <time>{{userPost.date | date : 'medium'}}</time></p>
+            </div>
+        </header>
+        <div class="right">
+            <span><a href="#">{{userPost.likesCount}}</a></span>
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+            <span><a href="#">1</a></span>
+            <span class="glyphicon glyphicon-comment"></span>
         </div>
-        <div class="post-info">
-            <p><a href="#" class="profile-link">Name</a></p>
-            <p>on <time>DateTime</time></p>
-
-        </div>
-    </header>
-    <div class="right">
-        <span><a href="#">1</a></span>
-        <span class="glyphicon glyphicon-thumbs-up"></span>
-        <span><a href="#">1</a></span>
-        <span class="glyphicon glyphicon-comment"></span>
-    </div>
-    <section class="post-content">
-        <p>Post Content</p>
-    </section>
-</article>
-<!-- end of posts page -->
+        <section class="post-content">
+            <p>{{userPost.postContent}}</p>
+        </section>
+    </article>
+</div>
