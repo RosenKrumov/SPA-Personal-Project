@@ -7,7 +7,9 @@
                 <img class="mini-thumbnail" ng-src="{{item.author.profileImageData}}"/>
             </div>
             <div class="post-info">
-                <p><a href="#/{{item.author.username}}" class="profile-link">{{item.author.name}}</a></p>
+                <p><a href="#/{{item.author.username}}" class="profile-link">{{item.author.name}}</a>
+                    <span ng-if="item.wallOwner.username !== item.author.username"> posted on the wall of <a href="#/{{item.wallOwner.username}}">{{item.wallOwner.name}}</a></span>
+                    <span ng-if="item.wallOwner.username === item.author.username"> posted on their wall</span></p>
                 <p>on <time>{{item.date | date : 'medium'}}</time></p>
             </div>
         </header>
