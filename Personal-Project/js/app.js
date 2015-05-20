@@ -15,18 +15,24 @@ SocialNetwork.config(function($routeProvider) {
        .when('/register', {
            templateUrl: 'templates/register.html'
        })
-       .when('/profile', {
-           templateUrl: 'templates/profile.html'
-       })
        .when('/profile/edit', {
            templateUrl: 'templates/edit-profile.html',
            controller: 'ProfileController'
        })
        .when('/profile/changePassword', {
-           templateUrl: 'templates/change-password.html'
+           templateUrl: 'templates/change-password.html',
+           controller: 'ProfileController'
        })
        .when('/news', {
            templateUrl: 'templates/news-feed.html',
+           controller: 'ProfileController'
+       })
+       .when('/requests', {
+           templateUrl: 'templates/friend-request.html',
+           controller: 'ProfileController'
+       })
+       .when('/:username', {
+           templateUrl: 'templates/profile.html',
            controller: 'ProfileController'
        })
        .otherwise({redirectTo:'/'})
