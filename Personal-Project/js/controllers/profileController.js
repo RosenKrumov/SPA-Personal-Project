@@ -13,7 +13,6 @@ SocialNetwork.controller('ProfileController',
             profileAuthentication.GetFriendRequests(profileAuthentication.GetHeaders(),
                 function(data) {
                     $scope.friendRequests = data;
-                    console.log(data);
                 }, function(error) {
                     console.log(error);
                 }
@@ -68,7 +67,6 @@ SocialNetwork.controller('ProfileController',
             profileAuthentication.GetMyProfile(
                 function(serverData) {
                     $scope.userData = serverData;
-                    console.log(serverData);
                 }, function(serverError) {
                     console.log(serverError);
                 }
@@ -81,7 +79,7 @@ SocialNetwork.controller('ProfileController',
                     profileAuthentication.GetMyProfile(
                         function(serverData) {
                             $scope.otherUserData = serverData;
-                            console.log(serverData);
+                            $scope.canPost = true;
                         }, function(serverError) {
                             console.log(serverError);
                         }
@@ -90,6 +88,7 @@ SocialNetwork.controller('ProfileController',
                     profileAuthentication.GetUserProfile($routeParams.username,
                         function(data) {
                             $scope.otherUserData = data;
+                            $scope.canPost = data.isFriend;
                         }, function(error) {
                             console.log(error);
                         }
