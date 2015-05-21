@@ -13,7 +13,6 @@ SocialNetwork.controller('AuthenticationController',
         $scope.login = function () {
             profileAuthentication.Login($scope.loginData,
                 function(serverData) {
-                    console.log(serverData);
                     notifyService.showInfo("Successfully logged in");
                     profileAuthentication.SetCredentials(serverData);
                     $scope.ClearData();
@@ -28,7 +27,6 @@ SocialNetwork.controller('AuthenticationController',
         $scope.register = function () {
             profileAuthentication.Register($scope.registerData,
                 function(serverData) {
-                    console.log(serverData);
                     notifyService.showInfo("Successfully registered");
                     profileAuthentication.SetCredentials(serverData);
                     $scope.ClearData();
