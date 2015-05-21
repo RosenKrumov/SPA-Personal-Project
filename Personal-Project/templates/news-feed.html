@@ -3,6 +3,11 @@
 <div ng-controller="postController">
     <article class="post well" ng-repeat="item in news">
         <header class="post-header">
+            <div class="form-group pull-right" style="margin-right: 30px;" ng-if="item.author.username === username">
+
+                <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></button>
+                <button type="button" class="btn btn-danger" ng-click="deletePost(item.id)"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
             <div class="post-image">
                 <img class="mini-thumbnail" ng-src="{{item.author.profileImageData}}"/>
             </div>
@@ -10,17 +15,94 @@
                 <p><a href="#/{{item.author.username}}" class="profile-link">{{item.author.name}}</a>
                     <span ng-if="item.wallOwner.username !== item.author.username"> posted on the wall of <a href="#/{{item.wallOwner.username}}">{{item.wallOwner.name}}</a></span>
                     <span ng-if="item.wallOwner.username === item.author.username"> posted on their wall</span></p>
-                <p>on <time>{{item.date | date : 'medium'}}</time></p>
+                <p><time>{{item.date | dateTimeFilter}}</time></p>
             </div>
         </header>
         <div class="right">
-            <span><a href="#">{{item.likesCount}}</a></span>
-            <span class="glyphicon glyphicon-thumbs-up"></span>
-            <span><a href="#">1</a></span>
-            <span class="glyphicon glyphicon-comment"></span>
+            <button class="btn btn-primary" ng-click="likePost(item)" ng-if="!item.liked">
+                <a style="color: white;">
+                    <strong>{{item.likesCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+            </button>
+            <button class="btn btn-primary" ng-click="unlikePost(item)" ng-if="item.liked">
+                <a style="color: white;">
+                    <strong>{{item.likesCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+            </button>
+            <button class="btn btn-info">
+                <a style="color: white;">
+                    <strong>{{item.totalCommentsCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-comment"></span>
+            </button>
         </div>
         <section class="post-content">
             <p>{{item.postContent}}</p>
         </section>
+        <div id="{{item.id}}">
+            <div ng-if="item.comments.length > 0">
+                <div ng-repeat="comment in item.comments" ng-controller="CollapseDemoCtrl">
+                    <div class="post well">
+                        <p>
+                            Author:
+                            <img id="navbarImg" ng-src="{{comment.author.profileImageData}}" alt="image"/>
+                            <a href="#/{{comment.author.username}}" class="profile-link">{{comment.author.name}}</a>
+                        </p>
+                        <p>
+                            {{comment.date | dateTimeFilter}}
+                        </p>
+                        <p>
+                            Content: {{comment.commentContent}}
+                        </p>
+                        <button class="btn btn-primary" ng-click="likeCommentOnPost(item.id, comment)" ng-if="!comment.liked">
+                            <a style="color: white;">
+                                <strong>{{comment.likesCount}}</strong>
+                            </a>
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                        </button>
+                        <button class="btn btn-primary" ng-click="unlikeCommentOnPost(item.id, comment)" ng-if="comment.liked">
+                            <a style="color: white;">
+                                <strong>{{comment.likesCount}}</strong>
+                            </a>
+                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                        </button>
+                        <button type="button" class="btn btn-warning" ng-click="collapse('comment');" ng-if="comment.author.username === username">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="deleteCommentOnPost(item, comment)" ng-if="comment.author.username === username">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <div collapse="isCommentCollapsed">
+                            <textarea class="well well-lg" cols="90" rows="2" ng-model="comment.commentContent"></textarea>
+                            <button type="button" class="btn btn-default" ng-click="editCommentOnPost(item, comment);">Edit</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="post-container" id="post-container" ng-controller="postController">
+                <form class="form-horizontal" ng-submit="addCommentToPost(item)">
+                    <fieldset>
+                        <div class="form-group">
+                            <div>
+                                <textarea class="form-control" rows="3" id="post-content" ng-model="commentData.commentContent" placeholder="Message..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <div class="image-container">
+                                <img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/>
+                            </div> as {{userData.name}}
+                        </div>
+                        <div class="form-group pull-left">
+                            <div>
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </article>
 </div>
