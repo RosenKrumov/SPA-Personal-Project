@@ -1,10 +1,10 @@
 <!-- post box -->
-<div class="post-container" id="post-container" ng-controller="postController">
+<div class="post-container" id="post-container" ng-if="canPost" ng-controller="postController">
     <form class="form-horizontal" ng-submit="addPost()">
         <fieldset>
             <div class="form-group">
                 <div>
-                    <textarea class="form-control" rows="3" id="post-content" ng-model="postData.PostContent" placeholder="Message..."></textarea>
+                    <textarea class="form-control" rows="3" id="post-content" ng-model="postData.postContent" placeholder="Message..."></textarea>
                 </div>
             </div>
             <div class="form-group pull-right">
@@ -22,24 +22,115 @@
 </div>
 <!-- end of post box -->
 <div ng-controller="postController">
+    <h1 ng-if="userPosts.length === 0" style="text-align: center">No posts by this user</h1>
     <article class="post well" ng-repeat="userPost in userPosts">
-        <header class="post-header">
+        <div ng-controller="CollapseDemoCtrl">
+            <div class="form-group pull-right" style="margin-right: 30px;">
+                <button type="button" class="btn btn-warning" ng-click="collapse('post');" ng-if="userPost.author.username === username">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="deletePost(userPost)" ng-if="userPost.author.username === username || userPost.wallOwner.username === username">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
             <div class="post-image">
                 <img class="mini-thumbnail" ng-src="{{userPost.author.profileImageData}}"/>
             </div>
             <div class="post-info">
                 <p><a href="#/{{userPost.author.username}}" class="profile-link">{{userPost.author.name}}</a></p>
-                <p>on <time>{{userPost.date | date : 'medium'}}</time></p>
+                <p>{{userPost.date | dateTimeFilter}}</p>
             </div>
-        </header>
-        <div class="right">
-            <span><a href="#">{{userPost.likesCount}}</a></span>
-            <span class="glyphicon glyphicon-thumbs-up"></span>
-            <span><a href="#">1</a></span>
-            <span class="glyphicon glyphicon-comment"></span>
+            <div collapse="!isCollapsed" style="width: 300px; margin-left: 13%;">
+                <textarea class="well well-lg" cols="90" rows="2" ng-model="userPost.postContent"></textarea>
+                <button type="button" class="btn btn-default" ng-click="editPost(userPost);">Edit</button>
+            </div>
         </div>
+
+        <div class="right">
+            <button class="btn btn-primary" ng-click="likePost(userPost)" ng-if="!userPost.liked && canPost">
+                <a style="color: white;">
+                    <strong>{{userPost.likesCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+            </button>
+            <button class="btn btn-primary" ng-click="unlikePost(userPost)" ng-if="userPost.liked && canPost">
+                <a style="color: white;">
+                    <strong>{{userPost.likesCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+            </button>
+            <button class="btn btn-info">
+                <a style="color: white;">
+                    <strong>{{userPost.totalCommentsCount}}</strong>
+                </a>
+                <span class="glyphicon glyphicon-comment"></span>
+            </button>
+        </div>
+
         <section class="post-content">
-            <p>{{userPost.postContent}}</p>
+            <p style="text-align: left; margin-left: 30px;">{{userPost.postContent}}</p>
         </section>
+        <div id="{{userPost.id}}">
+            <div ng-if="userPost.comments.length > 0">
+                <div ng-repeat="comment in userPost.comments">
+                    <div class="post well" ng-controller="CollapseDemoCtrl">
+                        <p>
+                            Author:
+                            <img id="navbarImg" ng-src="{{comment.author.profileImageData}}" alt="image"/>
+                            <a href="#/{{comment.author.username}}" class="profile-link">{{comment.author.name}}</a>
+                        </p>
+                        <p>
+                            {{comment.date | dateTimeFilter}}
+                        </p>
+                        <p>
+                            Content: {{comment.commentContent}}
+                        </p>
+                        <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && canPost">
+                            <a style="color: white;">
+                                <strong>{{comment.likesCount}}</strong>
+                            </a>
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                        </button>
+                        <button class="btn btn-primary" ng-click="unlikeCommentOnPost(userPost.id, comment)" ng-if="comment.liked && canPost">
+                            <a style="color: white;">
+                                <strong>{{comment.likesCount}}</strong>
+                            </a>
+                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                        </button>
+                        <button type="button" class="btn btn-warning" ng-click="collapse('comment');" ng-if="comment.author.username === username">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="deleteCommentOnPost(userPost, comment)" ng-if="comment.author.username === username || userPost.wallOwner.username === username">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <div collapse="isCommentCollapsed">
+                            <textarea class="well well-lg" cols="90" rows="2" ng-model="comment.commentContent"></textarea>
+                            <button type="button" class="btn btn-default" ng-click="editCommentOnPost(userPost, comment);">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="post-container" id="post-container" ng-controller="postController" ng-if="canPost">
+                <form class="form-horizontal" ng-submit="addCommentToPost(userPost)">
+                    <fieldset>
+                        <div class="form-group">
+                            <div>
+                                <textarea class="form-control" rows="3" id="post-content" ng-model="commentData.commentContent" placeholder="Message..."></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <div class="image-container">
+                                <img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/>
+                            </div> as {{userData.name}}
+                        </div>
+                        <div class="form-group pull-left">
+                            <div>
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </article>
 </div>
