@@ -213,6 +213,10 @@ img.thumbnail.cover-picture-preview {
     height: 50px;
 }
 
+#editForm {
+    width: 50%;
+}
+
 @media only screen and (max-width: 490px) {
     .image-container {
         margin: 0 auto;
