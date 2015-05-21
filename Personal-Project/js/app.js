@@ -1,6 +1,6 @@
 'use strict';
 
-var SocialNetwork = angular.module('SocialNetwork', ['ngRoute']);
+var SocialNetwork = angular.module('SocialNetwork', ['ngRoute', 'ui.bootstrap']);
 
 SocialNetwork.constant('baseServiceUrl', 'http://softuni-social-network.azurewebsites.net/api');
 
@@ -50,4 +50,17 @@ SocialNetwork.run(function ($rootScope, $location, profileAuthentication) {
             $location.path("/news");
         }
     });
+});
+
+SocialNetwork.controller('CollapseDemoCtrl', function ($scope) {
+    $scope.isCollapsed = false;
+    $scope.isCommentCollapsed = true;
+
+    $scope.collapse = function(condition) {
+        if(condition === 'post') {
+            $scope.isCollapsed = !$scope.isCollapsed;
+        } else {
+            $scope.isCommentCollapsed = !$scope.isCommentCollapsed;
+        }
+    };
 });
