@@ -4,8 +4,7 @@
     <div class="image-container">
         <img class="thumbnail" ng-src="{{friendRequest.user.profileImageData}}"/>
     </div>
-    <p>Username: {{friendRequest.user.username}}</p>
-    <p>Name: {{friendRequest.user.name}}</p>
+    <p>Name: <a href="#/{{friendRequest.user.username}}">{{friendRequest.user.name}}</a></p>
     <p>Gender: {{friendRequest.user.gender | genderFilter}}</p>
     <button type="button" class="btn btn-primary" ng-click="acceptRequest(friendRequest.id)">Accept</button>
     <button type="button" class="btn btn-primary" ng-click="rejectRequest(friendRequest.id)">Reject</button>
