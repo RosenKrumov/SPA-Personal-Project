@@ -85,13 +85,13 @@
                         <p>
                             Content: {{comment.commentContent}}
                         </p>
-                        <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && canPost">
+                        <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && (canPost || userPost.author.isFriend)">
                             <a style="color: white;">
                                 <strong>{{comment.likesCount}}</strong>
                             </a>
                             <span class="glyphicon glyphicon-thumbs-up"></span>
                         </button>
-                        <button class="btn btn-primary" ng-click="unlikeCommentOnPost(userPost.id, comment)" ng-if="comment.liked && canPost">
+                        <button class="btn btn-primary" ng-click="unlikeCommentOnPost(userPost.id, comment)" ng-if="comment.liked && (canPost || userPost.author.isFriend)">
                             <a style="color: white;">
                                 <strong>{{comment.likesCount}}</strong>
                             </a>
@@ -109,8 +109,10 @@
                         </div>
                     </div>
                 </div>
+                <p style="text-align: center;" ng-if="!showCommentsClicked[userPost.id] && userPost.totalCommentsCount > 3"><a href="" ng-click="showAllCommentsOnPost(userPost)" style="">Show all comments...</a></p>
+                <p style="text-align: center;" ng-if="showCommentsClicked[userPost.id]"><a href="" ng-click="hideAllCommentsOnPost(userPost)" style="">Hide all comments...</a></p>
             </div>
-            <div class="post-container" id="post-container" ng-controller="postController" ng-if="canPost">
+            <div class="post-container" id="post-container" ng-controller="postController" ng-if="canPost || userPost.author.isFriend">
                 <form class="form-horizontal" ng-submit="addCommentToPost(userPost)">
                     <fieldset>
                         <div class="form-group">

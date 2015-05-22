@@ -79,8 +79,9 @@
                             <button type="button" class="btn btn-default" ng-click="editCommentOnPost(item, comment);">Edit</button>
                         </div>
                     </div>
-
                 </div>
+                <p style="text-align: center;" ng-if="!showCommentsClicked[item.id] && item.totalCommentsCount > 3"><a href="" ng-click="showAllCommentsOnPost(item)" style="">Show all comments...</a></p>
+                <p style="text-align: center;" ng-if="showCommentsClicked[item.id]"><a href="" ng-click="hideAllCommentsOnPost(item)" style="">Hide all comments...</a></p>
             </div>
             <div class="post-container" id="post-container" ng-controller="postController">
                 <form class="form-horizontal" ng-submit="addCommentToPost(item)">
