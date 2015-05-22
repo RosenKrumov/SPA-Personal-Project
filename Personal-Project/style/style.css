@@ -217,6 +217,22 @@ img.thumbnail.cover-picture-preview {
     width: 50%;
 }
 
+#searchForm {
+    width: 500px;
+}
+.friendRequestsNotification {
+    background: red;
+    position: absolute;
+    top: 10px;
+    font-size: 13px;
+    width: 17px;
+    height: 18px;
+    left: 30px;
+    padding: 0 5px;
+    color: white;
+    border-radius: 35%;
+}
+
 @media only screen and (max-width: 490px) {
     .image-container {
         margin: 0 auto;
