@@ -5,6 +5,7 @@ SocialNetwork.controller('postController',
 
         $scope.username = sessionStorage['username'];
         $scope.commentsClicked = {};
+        $scope.showCommentsClicked = {};
 
         $scope.clickComments = function(id){
             $scope.commentsClicked[id] = !$scope.commentsClicked[id];
@@ -44,8 +45,7 @@ SocialNetwork.controller('postController',
             postService.addPost($scope.postData, profileAuthentication.GetHeaders(),
                 function() {
                     notifyService.showInfo("Successful Ad Publish!");
-                    $scope.userPosts = {};
-                    getUserPosts();
+                    $route.reload();
                 },
                 function (serverError) {
                     notifyService.showError("Unsuccessful Ad Publish!", serverError)
@@ -150,5 +150,21 @@ SocialNetwork.controller('postController',
                 }
             )
         };
+
+        $scope.showAllCommentsOnPost = function(post) {
+            postService.showAllCommentsOnPost(post.id, profileAuthentication.GetHeaders(),
+                function(data){
+                    post.comments = data;
+                    $scope.showCommentsClicked[post.id] = true;
+                }, function(error){
+                    console.log(error);
+                }
+            )
+        };
+
+        $scope.hideAllCommentsOnPost = function(post) {
+            post.comments = post.comments.slice(0, 3);
+            $scope.showCommentsClicked[post.id] = false;
+        }
     }
 );
