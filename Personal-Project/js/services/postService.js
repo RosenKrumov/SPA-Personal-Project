@@ -92,6 +92,13 @@ SocialNetwork.factory('postService',
                 }).error(error);
         };
 
+        service.showAllCommentsOnPost = function(postId, headers, success, error) {
+            $http.get(serviceUrl + postId + '/comments/', { headers: headers })
+                .success(function (data, status, headers, config) {
+                    success(data);
+                }).error(error);
+        };
+
         return service;
     }
 );
