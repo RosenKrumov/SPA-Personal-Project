@@ -1,7 +1,7 @@
 'use strict';
 
 SocialNetwork.controller('AuthenticationController',
-    function ($scope, $location, $route, profileAuthentication, notifyService) {
+    function ($scope, $location, $route, userService, notifyService) {
 
         $scope.ClearData = function () {
             $scope.loginData = "";
@@ -11,10 +11,10 @@ SocialNetwork.controller('AuthenticationController',
         };
 
         $scope.login = function () {
-            profileAuthentication.Login($scope.loginData,
+            userService.Login($scope.loginData,
                 function(serverData) {
                     notifyService.showInfo("Successfully logged in");
-                    profileAuthentication.SetCredentials(serverData);
+                    userService.SetCredentials(serverData);
                     $scope.ClearData();
                     $location.path('/news');
                 },
@@ -25,10 +25,10 @@ SocialNetwork.controller('AuthenticationController',
         };
 
         $scope.register = function () {
-            profileAuthentication.Register($scope.registerData,
+            userService.Register($scope.registerData,
                 function(serverData) {
                     notifyService.showInfo("Successfully registered");
-                    profileAuthentication.SetCredentials(serverData);
+                    userService.SetCredentials(serverData);
                     $scope.ClearData();
                     $location.path('/news');
                 },
@@ -40,7 +40,7 @@ SocialNetwork.controller('AuthenticationController',
 
         $scope.logout = function () {
             $scope.ClearData();
-            profileAuthentication.ClearCredentials();
+            userService.ClearCredentials();
             notifyService.showInfo("Logout successful");
             $route.reload();
         };
