@@ -1,0 +1,13 @@
+<div ng-init="checkUserIsFriend(otherUserData);"></div>
+<div ng-include="'templates/header.html'"></div>
+<div ng-init="getFriends();">
+    <h1 style="text-align: center; margin: 50px;">{{otherUserData.name}} - Friends ({{listedFriends.length}} total)</h1>
+    <input type="text" class="form-control" ng-model="filterFriend" placeholder="Filter friends" style="width: 300px; position: absolute; top: 370px; right: 700px;">
+    <div id="listedFriendsContainer">
+        <div ng-repeat="friend in listedFriends | filter : {name:filterFriend}" class="listedFriendsDiv">
+            <img ng-src="{{friend.profileImageData}}" alt="no image"/>
+            <p><a href="#/{{friend.username}}" ng-mouseover="getUserPreviewData(friend.username, $event);" ng-mouseleave="hoverLeave();">{{friend.name}}</a></p>
+        </div>
+    </div>
+</div>
+<div ng-include="'templates/hover-box.html'" ng-show="profileHover" class="hoverBoxChe"></div>

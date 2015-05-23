@@ -1,0 +1,14 @@
+<aside ng-if="otherUserData.username === username" ng-init="getFriendsPreview();">
+    <h2><a href="#/{{otherUserData.username}}/friends">Friends - {{friends.totalCount}} total</a></h2>
+    <div ng-repeat="friend in friends.friends">
+        <img ng-src="{{friend.profileImageData}}" alt="no image"/>
+        <p><a href="#/{{friend.username}}">{{friend.name.split(' ')[0]}}</a></p>
+    </div>
+</aside>
+<aside ng-if="otherUserData.username !== username && otherUserData.isFriend" ng-init="getFriendsPreview();">
+    <h2><a href="#/{{otherUserData.username}}/friends">Friends - {{friends.totalCount}} total</a></h2>
+    <div ng-repeat="friend in friends.friends">
+        <img ng-src="{{friend.profileImageData}}" alt="no image"/>
+        <p><a href="#/{{friend.username}}" id="{{friend.username}}">{{friend.name.split(' ')[0]}}</a></p>
+    </div>
+</aside>
