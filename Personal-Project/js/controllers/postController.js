@@ -6,6 +6,10 @@ SocialNetwork.controller('postController',
         $scope.username = sessionStorage['username'];
         $scope.commentsClicked = {};
         $scope.showCommentsClicked = {};
+        $scope.news = [];
+        $scope.userPosts = [];
+        $scope.wallLastPostReached = false;
+        $scope.newsLastPostReached = false;
 
         $scope.clickComments = function(id){
             $scope.commentsClicked[id] = !$scope.commentsClicked[id];
@@ -16,26 +20,39 @@ SocialNetwork.controller('postController',
         };
 
         var getUserPosts = function () {
-            if($routeParams.username) {
-                var id = $routeParams.username;
-                postService.getUserPosts(id, profileAuthentication.GetHeaders(),
-                    function (resp) {
-                        console.log(resp);
-                        $scope.userPosts = resp;
-                    });
+            if(!$scope.wallLastPostReached) {
+                if($routeParams.username) {
+                    var id = $routeParams.username;
+                    postService.getUserPosts($scope.lastPostId, 5, id, profileAuthentication.GetHeaders(),
+                        function (resp) {
+                            if(resp.length == 0) {
+                                $scope.wallLastPostReached = true;
+                            } else {
+                                $scope.userPosts.push.apply($scope.userPosts, resp);
+                                $scope.lastPostId = resp[resp.length - 1].id;
+                            }
+                        });
+                }
             }
         };
 
         getUserPosts();
 
         $scope.getNewsFeed = function() {
-            postService.getNewsFeed(profileAuthentication.GetHeaders(),
-                function(data) {
-                    $scope.news = data;
-                }, function(error){
-                    console.log(error);
-                }
-            )
+            if(!$scope.newsLastPostReached) {
+                postService.getNewsFeed($scope.startPostId, 10, profileAuthentication.GetHeaders(),
+                    function(data) {
+                        if(data.length == 0) {
+                            $scope.newsLastPostReached = true;
+                        } else {
+                            $scope.news.push.apply($scope.news, data);
+                            $scope.startPostId = data[data.length - 1].id;
+                        }
+                    }, function(error){
+                        console.log(error);
+                    }
+                )
+            }
         };
 
         $scope.getNewsFeed();
@@ -165,6 +182,30 @@ SocialNetwork.controller('postController',
         $scope.hideAllCommentsOnPost = function(post) {
             post.comments = post.comments.slice(0, 3);
             $scope.showCommentsClicked[post.id] = false;
-        }
+        };
+
+        $scope.pageSize = 10;
+
+        $(document).ready(function(){
+            function addMoreNews() {
+                $scope.getNewsFeed();
+            }
+
+            function addMorePosts() {
+                getUserPosts();
+            }
+
+            //lastAddedLiveFunc();
+            $(window).scroll(function(){
+
+                var wintop = $(window).scrollTop(), docheight = $(document).height(), winheight = $(window).height();
+                var  scrolltrigger = 0.95;
+
+                if  ((wintop/(docheight-winheight)) > scrolltrigger) {
+                    addMoreNews();
+                    addMorePosts();
+                }
+            });
+        });
     }
 );
