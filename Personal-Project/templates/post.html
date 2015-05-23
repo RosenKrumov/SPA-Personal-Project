@@ -1,6 +1,6 @@
 <!-- post box -->
 <div class="post-container" id="post-container" ng-if="canPost" ng-controller="postController">
-    <form class="form-horizontal" ng-submit="addPost()">
+    <form class="form-horizontal" id="profilePostForm" ng-submit="addPost()">
         <fieldset>
             <div class="form-group">
                 <div>
@@ -21,9 +21,10 @@
     </form>
 </div>
 <!-- end of post box -->
+<div ng-include="'templates/hover-box.html'" ng-show="profileHover" class="hoverBoxChe"></div>
 <div ng-controller="postController">
     <h1 ng-if="userPosts.length === 0" style="text-align: center">No posts by this user</h1>
-    <article class="post well" ng-repeat="userPost in userPosts">
+    <article class="post well profilePostArticles" ng-repeat="userPost in userPosts">
         <div ng-controller="CollapseDemoCtrl">
             <div class="form-group pull-right" style="margin-right: 30px;">
                 <button type="button" class="btn btn-warning" ng-click="collapse('post');" ng-if="userPost.author.username === username">
@@ -37,7 +38,7 @@
                 <img class="mini-thumbnail" ng-src="{{userPost.author.profileImageData}}"/>
             </div>
             <div class="post-info">
-                <p><a href="#/{{userPost.author.username}}" class="profile-link">{{userPost.author.name}}</a></p>
+                <p><a href="#/{{userPost.author.username}}" ng-mouseover="getUserPreviewData(userPost.author.username, $event);" ng-mouseleave="hoverLeave();" class="profile-link">{{userPost.author.name}}</a></p>
                 <p>{{userPost.date | dateTimeFilter}}</p>
             </div>
             <div collapse="!isCollapsed" style="width: 300px; margin-left: 13%;">
@@ -59,7 +60,7 @@
                 </a>
                 <span class="glyphicon glyphicon-thumbs-down"></span>
             </button>
-            <button class="btn btn-info">
+            <button class="btn btn-info" ng-click="clickComments(userPost.id)">
                 <a style="color: white;">
                     <strong>{{userPost.totalCommentsCount}}</strong>
                 </a>
@@ -75,15 +76,14 @@
                 <div ng-repeat="comment in userPost.comments">
                     <div class="post well" ng-controller="CollapseDemoCtrl">
                         <p>
-                            Author:
                             <img id="navbarImg" ng-src="{{comment.author.profileImageData}}" alt="image"/>
-                            <a href="#/{{comment.author.username}}" class="profile-link">{{comment.author.name}}</a>
+                            <a href="#/{{comment.author.username}}" ng-mouseover="getUserPreviewData(comment.author.username, $event);" ng-mouseleave="hoverLeave();" class="profile-link">{{comment.author.name}}</a>
                         </p>
                         <p>
                             {{comment.date | dateTimeFilter}}
                         </p>
                         <p>
-                            Content: {{comment.commentContent}}
+                            {{comment.commentContent}}
                         </p>
                         <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && (canPost || userPost.author.isFriend)">
                             <a style="color: white;">
@@ -112,7 +112,7 @@
                 <p style="text-align: center;" ng-if="!showCommentsClicked[userPost.id] && userPost.totalCommentsCount > 3"><a href="" ng-click="showAllCommentsOnPost(userPost)" style="">Show all comments...</a></p>
                 <p style="text-align: center;" ng-if="showCommentsClicked[userPost.id]"><a href="" ng-click="hideAllCommentsOnPost(userPost)" style="">Hide all comments...</a></p>
             </div>
-            <div class="post-container" id="post-container" ng-controller="postController" ng-if="canPost || userPost.author.isFriend">
+            <div class="post-container" id="post-container" ng-controller="postController" ng-if="(canPost || userPost.author.isFriend) && checkCommentsClicked(userPost.id)">
                 <form class="form-horizontal" ng-submit="addCommentToPost(userPost)">
                     <fieldset>
                         <div class="form-group">
@@ -135,4 +135,8 @@
             </div>
         </div>
     </article>
+    <div id="lastPostLoader">
+        <img src="http://www.nrdepartamentos.com.ar/img/loading.gif" alt="" style="margin-left: 800px;"/>
+    </div>
+    <h1 ng-if="wallLastPostReached" style="text-align: center;">No more posts by this user</h1>
 </div>
