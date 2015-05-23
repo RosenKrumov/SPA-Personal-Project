@@ -1,15 +1,17 @@
 'use strict';
 
 SocialNetwork.controller('postController',
-    function($scope, $location, $route, $routeParams, postService, profileAuthentication, notifyService){
+    function($scope, $location, $route, $routeParams, postService, userService, notifyService){
 
-        $scope.username = sessionStorage['username'];
+        $scope.username = userService.GetUsername();
         $scope.commentsClicked = {};
         $scope.showCommentsClicked = {};
         $scope.news = [];
         $scope.userPosts = [];
         $scope.wallLastPostReached = false;
         $scope.newsLastPostReached = false;
+
+        $scope.pageSize = 10;
 
         $scope.clickComments = function(id){
             $scope.commentsClicked[id] = !$scope.commentsClicked[id];
@@ -23,12 +25,19 @@ SocialNetwork.controller('postController',
             if(!$scope.wallLastPostReached) {
                 if($routeParams.username) {
                     var id = $routeParams.username;
-                    postService.getUserPosts($scope.lastPostId, 5, id, profileAuthentication.GetHeaders(),
+                    var userPostsPageSize = $scope.pageSize / 2;
+                    postService.getUserPosts($scope.lastPostId, userPostsPageSize, id, userService.GetHeaders(),
                         function (resp) {
                             if(resp.length == 0) {
                                 $scope.wallLastPostReached = true;
                             } else {
                                 $scope.userPosts.push.apply($scope.userPosts, resp);
+                                $scope.userPosts.forEach(function(userPost) {
+                                    $scope.getPostDetailedLikes(userPost);
+                                    userPost.comments.forEach(function(comment) {
+                                        $scope.getCommentDetailedLikes(userPost, comment);
+                                    });
+                                });
                                 $scope.lastPostId = resp[resp.length - 1].id;
                             }
                         });
@@ -40,12 +49,18 @@ SocialNetwork.controller('postController',
 
         $scope.getNewsFeed = function() {
             if(!$scope.newsLastPostReached) {
-                postService.getNewsFeed($scope.startPostId, 10, profileAuthentication.GetHeaders(),
+                postService.getNewsFeed($scope.startPostId, $scope.pageSize, userService.GetHeaders(),
                     function(data) {
                         if(data.length == 0) {
                             $scope.newsLastPostReached = true;
                         } else {
                             $scope.news.push.apply($scope.news, data);
+                            $scope.news.forEach(function(item) {
+                                $scope.getPostDetailedLikes(item);
+                                item.comments.forEach(function(comment) {
+                                    $scope.getCommentDetailedLikes(item, comment);
+                                });
+                            });
                             $scope.startPostId = data[data.length - 1].id;
                         }
                     }, function(error){
@@ -59,7 +74,7 @@ SocialNetwork.controller('postController',
 
         $scope.addPost = function () {
             $scope.postData.username = $routeParams.username;
-            postService.addPost($scope.postData, profileAuthentication.GetHeaders(),
+            postService.addPost($scope.postData, userService.GetHeaders(),
                 function() {
                     notifyService.showInfo("Successful Ad Publish!");
                     $route.reload();
@@ -70,7 +85,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.addCommentToPost = function(post) {
-            postService.addCommentToPost(post.id, $scope.commentData, profileAuthentication.GetHeaders(),
+            postService.addCommentToPost(post.id, $scope.commentData, userService.GetHeaders(),
                 function(data) {
                     post.comments.unshift(data);
                     $scope.commentData = {};
@@ -81,7 +96,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.editPost = function (post) {
-            postService.editPost(post.id, post, profileAuthentication.GetHeaders(),
+            postService.editPost(post.id, post, userService.GetHeaders(),
                 function() {
                     $route.reload();
                 },
@@ -91,7 +106,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.deletePost = function (post) {
-            postService.deletePost(post.id, profileAuthentication.GetHeaders(),
+            postService.deletePost(post.id, userService.GetHeaders(),
                 function() {
                     $scope.userPosts = {};
                     getUserPosts();
@@ -102,7 +117,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.likePost = function(post) {
-            postService.likePost(post.id, profileAuthentication.GetHeaders(),
+            postService.likePost(post.id, userService.GetHeaders(),
                 function() {
                     post.liked = true;
                     post.likesCount++;
@@ -114,7 +129,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.unlikePost = function(post) {
-            postService.unlikePost(post.id, profileAuthentication.GetHeaders(),
+            postService.unlikePost(post.id, userService.GetHeaders(),
                 function() {
                     post.liked = false;
                     post.likesCount--;
@@ -126,7 +141,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.deleteCommentOnPost = function(post, comment) {
-            postService.deleteCommentOnPost(comment.id, post.id, profileAuthentication.GetHeaders(),
+            postService.deleteCommentOnPost(comment.id, post.id, userService.GetHeaders(),
                 function() {
                     var commentIndex = post.comments.indexOf(comment);
                     post.comments.splice(commentIndex, 1);
@@ -137,7 +152,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.editCommentOnPost = function(post, comment) {
-            postService.editCommentOnPost(comment.id, post.id, comment, profileAuthentication.GetHeaders(),
+            postService.editCommentOnPost(comment.id, post.id, comment, userService.GetHeaders(),
                 function() {
                     $route.reload();
                 }, function(error) {
@@ -147,7 +162,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.likeCommentOnPost = function(postId, comment) {
-            postService.likeCommentOnPost(comment.id, postId, profileAuthentication.GetHeaders(),
+            postService.likeCommentOnPost(comment.id, postId, userService.GetHeaders(),
                 function() {
                     comment.liked = true;
                     comment.likesCount++;
@@ -158,7 +173,7 @@ SocialNetwork.controller('postController',
         };
 
         $scope.unlikeCommentOnPost = function(postId, comment) {
-            postService.unlikeCommentOnPost(comment.id, postId, profileAuthentication.GetHeaders(),
+            postService.unlikeCommentOnPost(comment.id, postId, userService.GetHeaders(),
                 function() {
                     comment.liked = false;
                     comment.likesCount--;
@@ -169,9 +184,12 @@ SocialNetwork.controller('postController',
         };
 
         $scope.showAllCommentsOnPost = function(post) {
-            postService.showAllCommentsOnPost(post.id, profileAuthentication.GetHeaders(),
+            postService.showAllCommentsOnPost(post.id, userService.GetHeaders(),
                 function(data){
                     post.comments = data;
+                    post.comments.forEach(function(comment) {
+                        $scope.getCommentDetailedLikes(post, comment);
+                    });
                     $scope.showCommentsClicked[post.id] = true;
                 }, function(error){
                     console.log(error);
@@ -184,7 +202,30 @@ SocialNetwork.controller('postController',
             $scope.showCommentsClicked[post.id] = false;
         };
 
-        $scope.pageSize = 10;
+        $scope.getPostDetailedLikes = function(post) {
+            postService.getPostDetailedLikes(post.id, userService.GetHeaders(),
+                function(data) {
+                    post.detailedLikes = data;
+                }, function(error) {
+                    console.log(error);
+                }
+            )
+        };
+
+        $scope.getCommentDetailedLikes = function(post, comment) {
+            postService.getCommentDetailedLikes(post.id, comment.id, userService.GetHeaders(),
+                function(data) {
+                    comment.detailedLikes = data;
+                }, function(error) {
+                    console.log(error);
+                }
+            )
+        };
+
+        $scope.showDetailedLikes = function() {
+            $scope.postDetailedLikesClicked = true;
+        };
+
 
         $(document).ready(function(){
             function addMoreNews() {
