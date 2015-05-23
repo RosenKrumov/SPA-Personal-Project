@@ -28,12 +28,16 @@ SocialNetwork.config(function($routeProvider) {
            templateUrl: 'templates/news-feed.html',
            controller: 'ProfileController'
        })
-       .when('/requests', {
-           templateUrl: 'templates/friend-request.html',
+       .when('/404', {
+           templateUrl: 'templates/404-not-found.html',
            controller: 'ProfileController'
        })
        .when('/:username', {
            templateUrl: 'templates/profile.html',
+           controller: 'ProfileController'
+       })
+       .when('/:username/friends', {
+           templateUrl: 'templates/friends.html',
            controller: 'ProfileController'
        })
        .otherwise({redirectTo:'/'});
