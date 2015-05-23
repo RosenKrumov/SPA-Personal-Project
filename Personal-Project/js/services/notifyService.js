@@ -8,7 +8,7 @@ SocialNetwork.factory('notifyService',
                     text: msg,
                     type: 'success',
                     layout: 'topCenter',
-                    timeout: 1000}
+                    timeout: 3000}
                 );
             },
             showError: function(msg, serverError) {
