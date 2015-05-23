@@ -1,7 +1,7 @@
 'use strict';
 
 SocialNetwork.controller('ProfileController',
-    function($scope, $location, $route, $routeParams, profileAuthentication, notifyService) {
+    function($scope, $location, $route, $routeParams, userService, notifyService) {
         $scope.ClearData = function () {
             $scope.loginData = "";
             $scope.registerData = "";
@@ -11,7 +11,7 @@ SocialNetwork.controller('ProfileController',
 
         $scope.menuOpened = false;
         $scope.friendsOpened = false;
-        $scope.username = sessionStorage['username'];
+        $scope.username = userService.GetUsername();
 
         $scope.toggleFriends = function(event) {
             $scope.friendsOpened = !$scope.friendsOpened;
@@ -56,7 +56,7 @@ SocialNetwork.controller('ProfileController',
         $scope.searchMenuShown = false;
 
         $scope.getFriendRequests = function() {
-            profileAuthentication.GetFriendRequests(profileAuthentication.GetHeaders(),
+            userService.GetFriendRequests(userService.GetHeaders(),
                 function(data) {
                     $scope.friendRequests = data;
                 }, function(error) {
@@ -110,7 +110,7 @@ SocialNetwork.controller('ProfileController',
         }();
 
         $scope.getMyData = function() {
-            profileAuthentication.GetMyProfile(
+            userService.GetMyProfile(
                 function(serverData) {
                     $scope.userData = serverData;
                 }, function(serverError) {
@@ -121,8 +121,8 @@ SocialNetwork.controller('ProfileController',
 
         $scope.getUserData = function() {
             if($routeParams.username) {
-                if($routeParams.username === sessionStorage['username']) {
-                    profileAuthentication.GetMyProfile(
+                if($routeParams.username === $scope.username) {
+                    userService.GetMyProfile(
                         function(serverData) {
                             $scope.otherUserData = serverData;
                             $scope.canPost = true;
@@ -131,7 +131,7 @@ SocialNetwork.controller('ProfileController',
                         }
                     )
                 } else {
-                    profileAuthentication.GetUserProfile($routeParams.username,
+                    userService.GetUserProfile($routeParams.username,
                         function(data) {
                             $scope.otherUserData = data;
                             $scope.canPost = data.isFriend;
@@ -146,7 +146,7 @@ SocialNetwork.controller('ProfileController',
         }();
 
         $scope.acceptRequest = function(request) {
-            profileAuthentication.ApproveRequest(request.id,
+            userService.ApproveRequest(request.id,
                 function() {
                     var requestIndex = $scope.friendRequests.indexOf(request);
                     $scope.friendRequests.splice(requestIndex, 1);
@@ -157,7 +157,7 @@ SocialNetwork.controller('ProfileController',
         };
 
         $scope.rejectRequest = function(request) {
-            profileAuthentication.RejectRequest(request.id,
+            userService.RejectRequest(request.id,
                 function() {
                     var requestIndex = $scope.friendRequests.indexOf(request);
                     $scope.friendRequests.splice(requestIndex, 1);
@@ -182,13 +182,12 @@ SocialNetwork.controller('ProfileController',
             if (!$scope.userData.email) {
                 delete $scope.userData.email;
             }
-            profileAuthentication.EditUserProfile($scope.userData,
+            userService.EditUserProfile($scope.userData,
                 function() {
                     $scope.ClearData();
                     notifyService.showInfo("Profile successfully edited");
-                    var username = sessionStorage['username'];
+                    var username = $scope.username;
                     $location.path('/' + username);
-                    $location.path('/profile');
                 },
                 function (serverError) {
                     console.log(serverError);
@@ -197,11 +196,11 @@ SocialNetwork.controller('ProfileController',
         };
 
         $scope.changePassword = function () {
-            profileAuthentication.ChangePassword($scope.passwordData,
+            userService.ChangePassword($scope.passwordData,
                 function() {
                     $scope.ClearData();
                     notifyService.showInfo("Password changed successfully");
-                    var username = sessionStorage['username'];
+                    var username = $scope.username;
                     $location.path('/' + username);
                 },
                 function (serverError) {
@@ -212,7 +211,7 @@ SocialNetwork.controller('ProfileController',
 
         $scope.searchUserByName = function(search) {
             if(search.length > 0) {
-                profileAuthentication.searchUserByName(search,
+                userService.searchUserByName(search,
                     function(data){
                         console.log(data);
                         $scope.foundUsers = data;
@@ -225,7 +224,7 @@ SocialNetwork.controller('ProfileController',
         };
 
         $scope.sendFriendRequest = function(username) {
-            profileAuthentication.SendRequest(username,
+            userService.SendRequest(username,
                 function(data) {
                     notifyService.showInfo(data.message);
                     $scope.otherUserData.hasPendingRequest = true;
@@ -238,7 +237,7 @@ SocialNetwork.controller('ProfileController',
         $scope.getFriendsPreview = function() {
             var username = $routeParams.username;
             if(username !== sessionStorage['username']) {
-                profileAuthentication.getFriendsPreview(username,
+                userService.getFriendsPreview(username,
                     function(data) {
                         $scope.friends = data;
                     }, function() {
@@ -246,7 +245,7 @@ SocialNetwork.controller('ProfileController',
                     }
                 );
             } else {
-                profileAuthentication.getOwnFriendsPreview(
+                userService.getOwnFriendsPreview(
                     function(data) {
                         console.log(data);
                         $scope.friends = data;
@@ -260,7 +259,7 @@ SocialNetwork.controller('ProfileController',
         $scope.getFriends = function() {
             var username = $routeParams.username;
             if(username !== sessionStorage['username']) {
-                profileAuthentication.listFriends(username,
+                userService.listFriends(username,
                     function(data) {
                         console.log(data);
                         $scope.listedFriends = data;
@@ -302,13 +301,5 @@ SocialNetwork.controller('ProfileController',
             $scope.newsFeedhover = !$scope.newsFeedhover;
             $scope.profileHover = !$scope.profileHover;
         };
-
-        $scope.checkUserIsFriend = function(otherUserData) {
-            //if(!otherUserData || (!otherUserData.isFriend && otherUserData.username !== $scope.username)) {
-            //    $location.path('/news');
-            //}
-        };
-
-
     }
 );

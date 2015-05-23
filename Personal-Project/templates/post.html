@@ -1,10 +1,10 @@
 <!-- post box -->
 <div class="post-container" id="post-container" ng-if="canPost" ng-controller="postController">
-    <form class="form-horizontal" id="profilePostForm" ng-submit="addPost()">
+    <form class="form-horizontal" id="profilePostForm" ng-submit="addPost()" name="postForm">
         <fieldset>
             <div class="form-group">
                 <div>
-                    <textarea class="form-control" rows="3" id="post-content" ng-model="postData.postContent" placeholder="Message..."></textarea>
+                    <textarea class="form-control" rows="3" id="post-content" required ng-model="postData.postContent" placeholder="Message..."></textarea>
                 </div>
             </div>
             <div class="form-group pull-right">
@@ -14,7 +14,7 @@
             </div>
             <div class="form-group pull-left">
                 <div>
-                    <button type="submit" class="btn btn-primary">Post</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="postForm.$invalid">Post</button>
                 </div>
             </div>
         </fieldset>
@@ -22,121 +22,5 @@
 </div>
 <!-- end of post box -->
 <div ng-include="'templates/hover-box.html'" ng-show="profileHover" class="hoverBoxChe"></div>
-<div ng-controller="postController">
-    <h1 ng-if="userPosts.length === 0" style="text-align: center">No posts by this user</h1>
-    <article class="post well profilePostArticles" ng-repeat="userPost in userPosts">
-        <div ng-controller="CollapseDemoCtrl">
-            <div class="form-group pull-right" style="margin-right: 30px;">
-                <button type="button" class="btn btn-warning" ng-click="collapse('post');" ng-if="userPost.author.username === username">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                <button type="button" class="btn btn-danger" ng-click="deletePost(userPost)" ng-if="userPost.author.username === username || userPost.wallOwner.username === username">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
-            </div>
-            <div class="post-image">
-                <img class="mini-thumbnail" ng-src="{{userPost.author.profileImageData}}"/>
-            </div>
-            <div class="post-info">
-                <p><a href="#/{{userPost.author.username}}" ng-mouseover="getUserPreviewData(userPost.author.username, $event);" ng-mouseleave="hoverLeave();" class="profile-link">{{userPost.author.name}}</a></p>
-                <p>{{userPost.date | dateTimeFilter}}</p>
-            </div>
-            <div collapse="!isCollapsed" style="width: 300px; margin-left: 13%;">
-                <textarea class="well well-lg" cols="90" rows="2" ng-model="userPost.postContent"></textarea>
-                <button type="button" class="btn btn-default" ng-click="editPost(userPost);">Edit</button>
-            </div>
-        </div>
-
-        <div class="right">
-            <button class="btn btn-primary" ng-click="likePost(userPost)" ng-if="!userPost.liked && canPost">
-                <a style="color: white;">
-                    <strong>{{userPost.likesCount}}</strong>
-                </a>
-                <span class="glyphicon glyphicon-thumbs-up"></span>
-            </button>
-            <button class="btn btn-primary" ng-click="unlikePost(userPost)" ng-if="userPost.liked && canPost">
-                <a style="color: white;">
-                    <strong>{{userPost.likesCount}}</strong>
-                </a>
-                <span class="glyphicon glyphicon-thumbs-down"></span>
-            </button>
-            <button class="btn btn-info" ng-click="clickComments(userPost.id)">
-                <a style="color: white;">
-                    <strong>{{userPost.totalCommentsCount}}</strong>
-                </a>
-                <span class="glyphicon glyphicon-comment"></span>
-            </button>
-        </div>
-
-        <section class="post-content">
-            <p style="text-align: left; margin-left: 30px;">{{userPost.postContent}}</p>
-        </section>
-        <div id="{{userPost.id}}">
-            <div ng-if="userPost.comments.length > 0">
-                <div ng-repeat="comment in userPost.comments">
-                    <div class="post well" ng-controller="CollapseDemoCtrl">
-                        <p>
-                            <img id="navbarImg" ng-src="{{comment.author.profileImageData}}" alt="image"/>
-                            <a href="#/{{comment.author.username}}" ng-mouseover="getUserPreviewData(comment.author.username, $event);" ng-mouseleave="hoverLeave();" class="profile-link">{{comment.author.name}}</a>
-                        </p>
-                        <p>
-                            {{comment.date | dateTimeFilter}}
-                        </p>
-                        <p>
-                            {{comment.commentContent}}
-                        </p>
-                        <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && (canPost || userPost.author.isFriend)">
-                            <a style="color: white;">
-                                <strong>{{comment.likesCount}}</strong>
-                            </a>
-                            <span class="glyphicon glyphicon-thumbs-up"></span>
-                        </button>
-                        <button class="btn btn-primary" ng-click="unlikeCommentOnPost(userPost.id, comment)" ng-if="comment.liked && (canPost || userPost.author.isFriend)">
-                            <a style="color: white;">
-                                <strong>{{comment.likesCount}}</strong>
-                            </a>
-                            <span class="glyphicon glyphicon-thumbs-down"></span>
-                        </button>
-                        <button type="button" class="btn btn-warning" ng-click="collapse('comment');" ng-if="comment.author.username === username">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </button>
-                        <button type="button" class="btn btn-danger" ng-click="deleteCommentOnPost(userPost, comment)" ng-if="comment.author.username === username || userPost.wallOwner.username === username">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                        <div collapse="isCommentCollapsed">
-                            <textarea class="well well-lg" cols="90" rows="2" ng-model="comment.commentContent"></textarea>
-                            <button type="button" class="btn btn-default" ng-click="editCommentOnPost(userPost, comment);">Edit</button>
-                        </div>
-                    </div>
-                </div>
-                <p style="text-align: center;" ng-if="!showCommentsClicked[userPost.id] && userPost.totalCommentsCount > 3"><a href="" ng-click="showAllCommentsOnPost(userPost)" style="">Show all comments...</a></p>
-                <p style="text-align: center;" ng-if="showCommentsClicked[userPost.id]"><a href="" ng-click="hideAllCommentsOnPost(userPost)" style="">Hide all comments...</a></p>
-            </div>
-            <div class="post-container" id="post-container" ng-controller="postController" ng-if="(canPost || userPost.author.isFriend) && checkCommentsClicked(userPost.id)">
-                <form class="form-horizontal" ng-submit="addCommentToPost(userPost)">
-                    <fieldset>
-                        <div class="form-group">
-                            <div>
-                                <textarea class="form-control" rows="3" id="post-content" ng-model="commentData.commentContent" placeholder="Message..."></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group pull-right">
-                            <div class="image-container">
-                                <img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/>
-                            </div> as {{userData.name}}
-                        </div>
-                        <div class="form-group pull-left">
-                            <div>
-                                <button type="submit" class="btn btn-primary">Post</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-    </article>
-    <div id="lastPostLoader">
-        <img src="http://www.nrdepartamentos.com.ar/img/loading.gif" alt="" style="margin-left: 800px;"/>
-    </div>
-    <h1 ng-if="wallLastPostReached" style="text-align: center;">No more posts by this user</h1>
-</div>
+<div ng-include="'templates/detailed-likes.html'" ng-show="postDetailedLikesClicked"></div>
+<div ng-include="'templates/profile-separated-post.html'"></div>

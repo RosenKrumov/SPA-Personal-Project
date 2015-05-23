@@ -1,96 +1,108 @@
 'use strict';
 
-SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) {
-    var service = {};
-
-    var serviceUrl = baseServiceUrl + '/users';
+SocialNetwork.factory('userService', function ($http, baseServiceUrl) {
+    var service = {},
+        serviceUrl = baseServiceUrl + '/users',
+        url;
 
     service.Login = function (loginData, success, error) {
-        $http.post(serviceUrl + '/Login', loginData)
-            .success(function (data, status, headers, config) {
+        url = serviceUrl + '/Login';
+        $http.post(url, loginData)
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.Register = function (registerData, success, error) {
-        $http.post(serviceUrl + '/Register', registerData)
-            .success(function (data, status, headers, config) {
+        url = serviceUrl + '/Register';
+        $http.post(url, registerData)
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.GetMyProfile = function (success, error) {
-        $http.get(baseServiceUrl + '/me', {headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me';
+        $http.get(url, {headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data)
             }).error(error);
     };
 
     service.GetUserProfile = function (username, success, error) {
-        $http.get(baseServiceUrl + '/users/' + username , {headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/users/' + username;
+        $http.get(url, {headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data)
             }).error(error);
     };
 
     service.EditUserProfile = function (editUserData, success, error) {
-        $http.put(baseServiceUrl + '/me', editUserData, { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me';
+        $http.put(url, editUserData, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data)
             }).error(error);
     };
 
     service.GetFriendRequests = function(headers, success, error) {
-        $http.get(baseServiceUrl + '/me/requests', { headers: headers })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me/requests';
+        $http.get(url, { headers: headers })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.ChangePassword = function (passwordData, success, error) {
-        $http.put(baseServiceUrl + '/me/ChangePassword', passwordData, { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me/ChangePassword';
+        $http.put(url, passwordData, { headers: this.GetHeaders() })
+            .success(function () {
                 success();
             }).error(error);
     };
 
     service.SendRequest = function(username, success, error) {
-        $http.post(baseServiceUrl + '/me/requests/' + username, null, { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me/requests/' + username;
+        $http.post(url, null, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.getOwnFriendsPreview = function(success, error) {
-        $http.get(baseServiceUrl + '/me/friends/preview', { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me/friends/preview';
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.getFriendsPreview = function(username, success, error) {
-        $http.get(baseServiceUrl + '/users/' + username + '/friends/preview', { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/users/' + username + '/friends/preview';
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.listOwnFriends = function(success, error) {
-        $http.get(baseServiceUrl + '/me/friends', { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/me/friends';
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.listFriends = function(username, success, error) {
-        $http.get(baseServiceUrl + '/users/' + username + '/friends', { headers: this.GetHeaders() })
-            .success(function (data, status, headers, config) {
+        url = baseServiceUrl + '/users/' + username + '/friends';
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
                 success(data);
             }).error(error);
     };
 
     service.ApproveRequest = function(id, success, error) {
-        var url = baseServiceUrl + '/me/requests/' + id + '?status=approved';
+        url = baseServiceUrl + '/me/requests/' + id + '?status=approved';
         $http.put(url, null, { headers: this.GetHeaders() })
             .success(function () {
                 success()
@@ -98,7 +110,7 @@ SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) 
     };
 
     service.RejectRequest = function(id, success, error) {
-        var url = baseServiceUrl + '/me/requests/' + id + '?status=rejected';
+        url = baseServiceUrl + '/me/requests/' + id + '?status=rejected';
         $http.put(url, null, { headers: this.GetHeaders() })
             .success(function () {
                 success()
@@ -106,7 +118,7 @@ SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) 
     };
 
     service.searchUserByName = function(searchTerm, success, error) {
-        var url = serviceUrl + '/search?searchTerm=' + searchTerm;
+        url = serviceUrl + '/search?searchTerm=' + searchTerm;
         $http.get(url, { headers: this.GetHeaders() })
             .success(function (data) {
                 success(data)
@@ -114,7 +126,7 @@ SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) 
     };
 
     service.getUserPreviewData = function(username, success, error) {
-        var url = serviceUrl + '/' + username + '/preview';
+        url = serviceUrl + '/' + username + '/preview';
         $http.get(url, { headers: this.GetHeaders() })
             .success(function (data) {
                 success(data)

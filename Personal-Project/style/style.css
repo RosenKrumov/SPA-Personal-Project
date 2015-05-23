@@ -304,6 +304,24 @@ article.post.well.ng-scope.profilePostArticles {
     z-index: 1;
 }
 
+textarea.well.well-lg {
+    max-width: 170%;
+}
+
+textarea.well.well-lg.editComment {
+    max-width: 100%;
+}
+
+#detailedLikes {
+    background: white;
+    position: absolute;
+    z-index: 1;
+    width: 500px;
+    height: 500px;
+    top: 400px;
+    left: 400px;
+}
+
 @media only screen and (max-width: 490px) {
     .image-container {
         margin: 0 auto;

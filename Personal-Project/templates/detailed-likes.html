@@ -1,0 +1,7 @@
+<div id="detailedLikes">
+    <div ng-repeat="like in detailedLikes">
+        <img class="thumbnail" ng-src="{{like.profileImageData}}" />
+        <span>{{like.name}}</span><br/>
+        <span><strong>Gender:</strong> {{like.gender | genderFilter}}</span>
+    </div>
+</div>

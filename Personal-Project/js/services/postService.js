@@ -45,6 +45,20 @@ SocialNetwork.factory('postService',
 
         };
 
+        service.getPostDetailedLikes = function(postId, headers, success, error) {
+            $http.get(serviceUrl + postId + '/likes', {headers: headers})
+                .success(function (data, status, headers, config) {
+                    success(data);
+                }).error(error);
+        };
+
+        service.getCommentDetailedLikes = function(postId, commentId, headers, success, error) {
+            $http.get(serviceUrl + postId + '/comments/' + commentId + '/likes', {headers: headers})
+                .success(function (data, status, headers, config) {
+                    success(data);
+                }).error(error);
+        };
+
         service.deletePost = function(id, headers, success, error) {
             $http.delete(serviceUrl + id, { headers: headers })
                 .success(function (data, status, headers, config) {
