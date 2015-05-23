@@ -3,17 +3,69 @@
     <nav class="navbar navbar-default" id="navbar">
         <div class="navbar-collapse collapse">
             <form class="navbar-left navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="searchForm" placeholder="Search...">
+                <div id="searchMenuDiv" class="input-group" ng-click="showSearchMenu()">
+                    <input type="text" class="form-control" id="searchForm" ng-model="search" ng-click="toggleMenu($event);" ng-keyup="searchUserByName(search);" placeholder="Search..." name="q">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
+                        <div ng-show="menuOpened" class="list-content dropDownSearch">
+                            <ul class="list-group">
+                                <li href="#" ng-repeat="user in foundUsers" class="list-group-item text-left">
+                                    <a href="#/{{user.username}}">
+                                        <img ng-src="{{user.profileImageData}}"/>
+                                    </a>
+                                    <label class="name">
+                                        <a href="#/{{user.username}}" class="name">
+                                            {{user.name}}
+                                        </a>
+                                    </label>
+
+                                    <div class="break"></div>
+                                </li>
+                                <li href="#" class="list-group-item text-left">
+                                    <a class="btn btn-block btn-info btn-primary">
+                                        <i class="fa fa-filter"></i>
+                                        <span>{{foundUsers.length || 0}}</span> <span>results total</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li><img id="navbarImg" ng-src="{{userData.profileImageData}}" alt="image"/><a href="#/{{userData.username}}" class="navbar-brand">{{userData.name.split(' ')[0]}}</a></li>
                 <li><a href="#/news">Home</a></li>
-                <li><a href="#/requests"><span class="glyphicon glyphicon-user"></span><span class="friendRequestsNotification">{{friendRequests.length}}</span></a></li>
+                <li id="friendRequestLi">
+                    <a href="" ng-click="getFriendRequests;toggleFriends($event)">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="friendRequestsNotification" ng-if="friendRequests.length > 0">{{friendRequests.length}}</span>
+                    </a>
+                    <div id="friendRequestDiv" ng-show="friendsOpened" class="headerFriendRequest">
+                        <span class="up-arrow"></span>
+                        <div class="list-content">
+                            <ul class="list-group">
+                                <li href="#" class="list-group-item title">
+                                    Friend requests
+                                </li>
+                                <li class="list-group-item text-left" ng-if="friendRequests.length === 0">No requests</li>
+                                <li href="#" class="list-group-item text-left">
+                                    <div class="friendRequest" ng-repeat="request in friendRequests">
+                                        <img id="navbarImg" ng-src="{{request.user.profileImageData || defaultUserAvatar}}">
+                                            <a href="#/{{request.user.username}}">{{request.user.name}}</a>
+                                        <div style="float: right;">
+                                            <a href="" class="re btn btn-success" ng-click="acceptRequest(request)">Accept</a>
+                                            <a href="" class="re btn btn-danger" ng-click="rejectRequest(request)">Reject</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li href="#" class="list-group-item text-left">
+                                    <i class="fa fa-filter"></i>
+                                    <span style="text-align: center">{{friendRequests.length || 0}} results total</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
                 <li><a href="#/profile/edit"><span class="glyphicon glyphicon-cog"></span></a></li>
                 <li><a href="#/profile/changePassword"><span class="glyphicon glyphicon-lock"></span></a></li>
                 <li ng-controller="AuthenticationController"><a href="#/" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
@@ -26,6 +78,9 @@
     <div class="image-container">
         <img class="thumbnail" ng-src="{{otherUserData.profileImageData}}"/>
     </div>
+    <button ng-click="sendFriendRequest(otherUserData.username)" class="btn btn-info requestButton" ng-if="otherUserData.username !== username && !otherUserData.isFriend && !otherUserData.hasPendingRequest"><strong>Send request</strong></button>
+    <button class="btn btn-success requestButton" disabled ng-if="otherUserData.username !== username && !otherUserData.isFriend && otherUserData.hasPendingRequest"><strong>Request sent</strong></button>
+    <button class="btn btn-success requestButton" disabled ng-if="otherUserData.username !== username && otherUserData.isFriend"><strong>Friend</strong></button>
     <div class="summary-container">
         <h2>{{otherUserData.name}}</h2>
     </div>
