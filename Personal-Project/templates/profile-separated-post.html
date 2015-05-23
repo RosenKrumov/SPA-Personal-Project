@@ -43,7 +43,9 @@
                 <span class="glyphicon glyphicon-comment"></span>
             </button>
         </div>
-
+        <section class="post-content">
+            <p>{{userPost.postContent}}</p>
+        </section>
         <section class="post-content">
         <div id="{{userPost.id}}">
             <div ng-if="userPost.comments.length > 0">

@@ -213,7 +213,6 @@ SocialNetwork.controller('ProfileController',
             if(search.length > 0) {
                 userService.searchUserByName(search,
                     function(data){
-                        console.log(data);
                         $scope.foundUsers = data;
                     }, function(error){
                         console.log(error);
@@ -247,7 +246,6 @@ SocialNetwork.controller('ProfileController',
             } else {
                 userService.getOwnFriendsPreview(
                     function(data) {
-                        console.log(data);
                         $scope.friends = data;
                     }, function(error) {
                         console.log(error);
@@ -261,16 +259,14 @@ SocialNetwork.controller('ProfileController',
             if(username !== sessionStorage['username']) {
                 userService.listFriends(username,
                     function(data) {
-                        console.log(data);
                         $scope.listedFriends = data;
                     }, function(error) {
                         console.log(error);
                     }
                 );
             } else {
-                profileAuthentication.listOwnFriends(
+                userService.listOwnFriends(
                     function(data) {
-                        console.log(data);
                         $scope.listedFriends = data;
                     }, function(error) {
                         console.log(error);
@@ -280,7 +276,7 @@ SocialNetwork.controller('ProfileController',
         };
 
         $scope.getUserPreviewData = function(username, $event){
-            profileAuthentication.getUserPreviewData(username,
+            userService.getUserPreviewData(username,
                 function(data) {
                     $scope.newsFeedhover = !$scope.newsFeedhover;
                     $scope.profileHover = !$scope.profileHover;
