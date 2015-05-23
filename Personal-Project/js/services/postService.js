@@ -15,18 +15,34 @@ SocialNetwork.factory('postService',
                 }).error(error);
         };
 
-        service.getUserPosts = function(id, headers, success, error) {
-            $http.get(baseServiceUrl + '/users/' + id + '/wall?PageSize=5', { headers: headers})
-                .success(function (data, status, headers, config) {
-                    success(data);
-                }).error(error);
+        service.getUserPosts = function(startPostId, pageSize, id, headers, success, error) {
+            if(!startPostId) {
+                $http.get(baseServiceUrl + '/users/' + id + '/wall?PageSize=' + pageSize, { headers: headers})
+                    .success(function (data, status, headers, config) {
+                        success(data);
+                    }).error(error);
+            } else {
+                $http.get(baseServiceUrl + '/users/' + id + '/wall?StartPostId=' + startPostId + '&PageSize=' + pageSize, { headers: headers})
+                    .success(function (data, status, headers, config) {
+                        success(data);
+                    }).error(error);
+            }
+
         };
 
-        service.getNewsFeed = function(headers, success, error) {
-            $http.get(baseServiceUrl + '/me/feed?PageSize=10', { headers: headers})
-                .success(function (data, status, headers, config) {
-                    success(data);
-                }).error(error);
+        service.getNewsFeed = function(startPostId, pageSize, headers, success, error) {
+            if(!startPostId) {
+                $http.get(baseServiceUrl + '/me/feed?PageSize=' + pageSize, { headers: headers})
+                    .success(function (data, status, headers, config) {
+                        success(data);
+                    }).error(error);
+            } else {
+                $http.get(baseServiceUrl + '/me/feed?StartPostId=' + startPostId + '&PageSize=' + pageSize, { headers: headers})
+                    .success(function (data, status, headers, config) {
+                        success(data);
+                    }).error(error);
+            }
+
         };
 
         service.deletePost = function(id, headers, success, error) {
