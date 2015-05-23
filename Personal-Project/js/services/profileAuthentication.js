@@ -50,7 +50,42 @@ SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) 
     service.ChangePassword = function (passwordData, success, error) {
         $http.put(baseServiceUrl + '/me/ChangePassword', passwordData, { headers: this.GetHeaders() })
             .success(function (data, status, headers, config) {
-                success()
+                success();
+            }).error(error);
+    };
+
+    service.SendRequest = function(username, success, error) {
+        $http.post(baseServiceUrl + '/me/requests/' + username, null, { headers: this.GetHeaders() })
+            .success(function (data, status, headers, config) {
+                success(data);
+            }).error(error);
+    };
+
+    service.getOwnFriendsPreview = function(success, error) {
+        $http.get(baseServiceUrl + '/me/friends/preview', { headers: this.GetHeaders() })
+            .success(function (data, status, headers, config) {
+                success(data);
+            }).error(error);
+    };
+
+    service.getFriendsPreview = function(username, success, error) {
+        $http.get(baseServiceUrl + '/users/' + username + '/friends/preview', { headers: this.GetHeaders() })
+            .success(function (data, status, headers, config) {
+                success(data);
+            }).error(error);
+    };
+
+    service.listOwnFriends = function(success, error) {
+        $http.get(baseServiceUrl + '/me/friends', { headers: this.GetHeaders() })
+            .success(function (data, status, headers, config) {
+                success(data);
+            }).error(error);
+    };
+
+    service.listFriends = function(username, success, error) {
+        $http.get(baseServiceUrl + '/users/' + username + '/friends', { headers: this.GetHeaders() })
+            .success(function (data, status, headers, config) {
+                success(data);
             }).error(error);
     };
 
@@ -67,6 +102,22 @@ SocialNetwork.factory('profileAuthentication', function ($http, baseServiceUrl) 
         $http.put(url, null, { headers: this.GetHeaders() })
             .success(function () {
                 success()
+            }).error(error);
+    };
+
+    service.searchUserByName = function(searchTerm, success, error) {
+        var url = serviceUrl + '/search?searchTerm=' + searchTerm;
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
+                success(data)
+            }).error(error);
+    };
+
+    service.getUserPreviewData = function(username, success, error) {
+        var url = serviceUrl + '/' + username + '/preview';
+        $http.get(url, { headers: this.GetHeaders() })
+            .success(function (data) {
+                success(data)
             }).error(error);
     };
 
