@@ -45,26 +45,15 @@ SocialNetwork.config(function($routeProvider) {
 
 });
 
-SocialNetwork.run(function ($rootScope, $location, profileAuthentication) {
+SocialNetwork.run(function ($rootScope, $location, userService) {
     $rootScope.$on('$locationChangeStart', function () {
-        if ($location.path().indexOf("login") === -1 && $location.path().indexOf("register") === -1 && !profileAuthentication.isLoggedIn()) {
+        if ($location.path().indexOf("login") === -1 && $location.path().indexOf("register") === -1 && !userService.isLoggedIn()) {
             $location.path("/");
         }
-        if (($location.path().indexOf("login") !== -1 || $location.path().indexOf("register")) !== -1 && profileAuthentication.isLoggedIn()) {
+        if (($location.path().indexOf("login") !== -1 || $location.path().indexOf("register")) !== -1 && userService.isLoggedIn()) {
             $location.path("/news");
         }
     });
 });
 
-SocialNetwork.controller('CollapseDemoCtrl', function ($scope) {
-    $scope.isCollapsed = false;
-    $scope.isCommentCollapsed = true;
 
-    $scope.collapse = function(condition) {
-        if(condition === 'post') {
-            $scope.isCollapsed = !$scope.isCollapsed;
-        } else {
-            $scope.isCommentCollapsed = !$scope.isCommentCollapsed;
-        }
-    };
-});
