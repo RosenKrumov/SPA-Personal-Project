@@ -1,12 +1,10 @@
-<!-- hover box -->
-<div class="hover-box">
-    <div class="hover-profile-image">
-        <img class="thumbnail" />
-    </div>
-    <div class="hover-profile-info">
-        <p class="hover-profile-name">Name</p>
-        <p><strong>Gender:</strong> Gender</p>
-        <p><strong>About me:</strong> About</p>
-    </div>
+<div class="hover-profile-image">
+    <img class="thumbnail" ng-src="{{previewData.profileImageData}}" />
 </div>
-<!-- end of hover box -->
+<div class="hover-profile-info">
+    <span>{{previewData.name}}</span><br/>
+    <span><strong>Gender:</strong> {{previewData.gender | genderFilter}}</span>
+    <span><button ng-click="sendFriendRequest(previewData.username)" class="btn btn-info requestButton" ng-if="previewData.username !== username && !previewData.isFriend && !previewData.hasPendingRequest"><strong>Send request</strong></button>
+    <button class="btn btn-success requestButton" disabled ng-if="previewData.username !== username && !previewData.isFriend && previewData.hasPendingRequest"><strong>Request sent</strong></button>
+    <button class="btn btn-success requestButton" disabled ng-if="previewData.username !== username && previewData.isFriend"><strong>Friend</strong></button></span>
+</div>
