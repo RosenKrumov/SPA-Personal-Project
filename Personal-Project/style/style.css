@@ -75,7 +75,7 @@ legend {
 }
 
 .main {
-    width: 90%;
+    width: 1700px;
     margin: 0 auto;
 }
 
@@ -231,6 +231,77 @@ img.thumbnail.cover-picture-preview {
     padding: 0 5px;
     color: white;
     border-radius: 35%;
+}
+
+.dropDownSearch {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    width: 500px;
+    z-index: 1;
+}
+
+.headerFriendRequest {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    width: 500px;
+    z-index: 1;
+}
+
+.requestButton {
+    position: absolute;
+    top: 165px;
+}
+
+aside.ng-scope {
+    position: absolute;
+    right: 450px;
+    top: 450px;
+    width: 20%;
+}
+
+.listedFriendsDiv {
+    display: inline-block;
+    margin: 30px;
+}
+
+#listedFriendsContainer {
+    margin: 0 auto;
+    width: 50%;
+}
+
+aside.ng-scope div {
+    display: inline-block;
+    margin: 10px;
+}
+
+aside.ng-scope div img{
+    width: 100px;
+    height: 100px;
+}
+
+form.form-horizontal#profilePostForm {
+    width: 40%;
+}
+
+article.post.well.ng-scope.profilePostArticles {
+    width: 40%;
+    margin-right: 760px;
+}
+
+.hoverBoxChe {
+    position: absolute;
+    z-index: 1;
+}
+
+.hoverBoxChe button {
+    float: right;
+}
+
+#friendHoverBoxChe {
+    position: absolute;
+    z-index: 1;
 }
 
 @media only screen and (max-width: 490px) {
