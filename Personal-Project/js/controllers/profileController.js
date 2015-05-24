@@ -234,8 +234,8 @@ SocialNetwork.controller('ProfileController',
         };
 
         $scope.getFriendsPreview = function() {
-            var username = $routeParams.username;
-            if(username !== sessionStorage['username']) {
+            var username = $routeParams.username || $scope.username;
+            if(username !== $scope.username) {
                 userService.getFriendsPreview(username,
                     function(data) {
                         $scope.friends = data;

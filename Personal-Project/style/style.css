@@ -322,6 +322,10 @@ textarea.well.well-lg.editComment {
     left: 400px;
 }
 
+.postContent, .commentContent {
+    word-wrap: break-word;
+}
+
 @media only screen and (max-width: 490px) {
     .image-container {
         margin: 0 auto;

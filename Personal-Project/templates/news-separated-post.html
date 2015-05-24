@@ -36,7 +36,7 @@
             </button>
         </div>
         <section class="post-content">
-            <p>{{item.postContent}}</p>
+            <p class="postContent">{{item.postContent}}</p>
         </section>
         <div id="{{item.id}}">
             <div ng-if="item.comments.length > 0">
@@ -49,7 +49,7 @@
                         <p>
                             {{comment.date | dateTimeFilter}}
                         </p>
-                        <p>
+                        <p class="commentContent">
                             {{comment.commentContent}}
                         </p>
                         <button class="btn btn-primary" ng-click="likeCommentOnPost(item.id, comment)" ng-if="!comment.liked">

@@ -44,7 +44,7 @@
             </button>
         </div>
         <section class="post-content">
-            <p>{{userPost.postContent}}</p>
+            <p class="postContent">{{userPost.postContent}}</p>
         </section>
         <section class="post-content">
         <div id="{{userPost.id}}">
@@ -58,7 +58,7 @@
                         <p>
                             {{comment.date | dateTimeFilter}}
                         </p>
-                        <p>
+                        <p class="commentContent">
                             {{comment.commentContent}}
                         </p>
                         <button class="btn btn-primary" ng-click="likeCommentOnPost(userPost.id, comment)" ng-if="!comment.liked && (canPost || userPost.author.isFriend)">
